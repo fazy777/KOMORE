@@ -1,0 +1,291 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Komore Wireframes: Steps 3, 4, 5 (Scheduling & AI Timetable Engine)</title>
+<style>
+  :root { --ink:#1f2328; --mute:#6b7280; --line:#c8ccd2; --soft:#f1f3f5; --acc:#3b5bdb; --lock:#e9ecef; }
+  * { box-sizing: border-box; }
+  body { margin:0; font-family: Arial, Helvetica, sans-serif; color:var(--ink); background:#fff; padding:32px 24px 64px; }
+  h1 { font-size:24px; margin:0 0 4px; }
+  h2 { font-size:18px; margin:40px 0 12px; border-bottom:2px solid var(--ink); padding-bottom:6px; }
+  .sub { color:var(--mute); font-size:14px; margin:0 0 4px; }
+  .flow { display:flex; flex-wrap:wrap; gap:8px; align-items:center; font-size:13px; margin:12px 0; }
+  .flow span.n { border:1.5px solid var(--ink); border-radius:6px; padding:5px 9px; background:var(--soft); }
+  .flow span.a { color:var(--mute); }
+  .grid { display:flex; flex-wrap:wrap; gap:36px; }
+  .item { width:300px; }
+  .item h3 { font-size:15px; margin:0 0 8px; }
+  .note { font-size:12px; color:var(--mute); margin-top:8px; line-height:1.45; }
+  .note b { color:var(--ink); }
+  .phone { width:300px; height:600px; border:2.5px solid var(--ink); border-radius:26px; overflow:hidden; display:flex; flex-direction:column; background:#fff; position:relative; }
+  .top { padding:14px 14px 10px; border-bottom:1.5px solid var(--line); font-weight:bold; font-size:15px; display:flex; justify-content:space-between; align-items:center; }
+  .top small { font-weight:normal; color:var(--mute); font-size:12px; }
+  .body { flex:1; padding:12px; overflow:hidden; font-size:12.5px; }
+  .tabs { display:flex; border-top:1.5px solid var(--line); }
+  .tabs div { flex:1; text-align:center; padding:9px 0; font-size:11.5px; color:var(--mute); }
+  .tabs div.on { color:var(--ink); font-weight:bold; border-top:3px solid var(--ink); margin-top:-1.5px; }
+  .days { display:flex; gap:4px; margin-bottom:10px; }
+  .days div { flex:1; text-align:center; border:1.5px solid var(--line); border-radius:6px; padding:5px 0; font-size:11px; }
+  .days div.on { background:var(--ink); color:#fff; border-color:var(--ink); }
+  .card { border:1.5px solid var(--ink); border-radius:8px; padding:8px 10px; margin-bottom:8px; }
+  .card.fixed { background:var(--lock); }
+  .card .t { font-weight:bold; font-size:13px; }
+  .card .m { color:var(--mute); font-size:11.5px; margin-top:2px; }
+  .row { display:flex; justify-content:space-between; align-items:center; gap:6px; }
+  .tag { display:inline-block; border:1.2px solid var(--ink); border-radius:10px; padding:1px 7px; font-size:10.5px; margin-right:4px; }
+  .tag.hi { background:var(--ink); color:#fff; }
+  .btn { border:1.8px solid var(--ink); border-radius:8px; padding:9px; text-align:center; font-weight:bold; font-size:13px; margin-top:8px; }
+  .btn.fill { background:var(--ink); color:#fff; }
+  .btn.ghost { border-style:dashed; font-weight:normal; }
+  .fab { position:absolute; right:14px; bottom:58px; width:42px; height:42px; border-radius:50%; background:var(--ink); color:#fff; font-size:24px; text-align:center; line-height:40px; }
+  .field { margin-bottom:9px; }
+  .field label { display:block; font-size:11px; color:var(--mute); margin-bottom:3px; }
+  .inp { border:1.5px solid var(--line); border-radius:6px; padding:8px; color:var(--mute); }
+  .seg { display:flex; border:1.5px solid var(--ink); border-radius:6px; overflow:hidden; }
+  .seg div { flex:1; text-align:center; padding:6px 2px; font-size:11px; border-right:1.5px solid var(--ink); }
+  .seg div:last-child { border-right:0; }
+  .seg div.on { background:var(--ink); color:#fff; }
+  .chips { display:flex; gap:5px; flex-wrap:wrap; margin-bottom:10px; }
+  .chips div { border:1.5px solid var(--line); border-radius:12px; padding:3px 9px; font-size:11px; }
+  .chips div.on { border-color:var(--ink); background:var(--soft); font-weight:bold; }
+  .slot { display:flex; gap:8px; margin-bottom:6px; }
+  .slot .time { width:42px; font-size:10.5px; color:var(--mute); padding-top:6px; }
+  .slot .blk { flex:1; border-radius:6px; padding:6px 8px; border:1.5px solid var(--ink); font-size:11.5px; }
+  .slot .blk.cls { background:repeating-linear-gradient(45deg,#e9ecef,#e9ecef 6px,#dee2e6 6px,#dee2e6 12px); }
+  .slot .blk.gap { border:1.5px dashed var(--line); color:var(--mute); }
+  .warn { border:1.5px solid var(--ink); border-radius:6px; padding:6px 8px; font-size:11px; margin-top:6px; background:var(--soft); }
+  .sheet { position:absolute; left:0; right:0; bottom:0; background:#fff; border-top:2.5px solid var(--ink); border-radius:18px 18px 0 0; padding:14px 14px 16px; height:330px; }
+  .dim { position:absolute; inset:0; background:rgba(0,0,0,.28); }
+  .dot { display:inline-block; width:9px; height:9px; border-radius:50%; background:var(--ink); margin-right:5px; }
+  table { border-collapse:collapse; font-size:13px; margin-top:8px; }
+  th, td { border:1.5px solid var(--line); padding:6px 10px; text-align:left; vertical-align:top; }
+  th { background:var(--soft); }
+  @media print { .item { break-inside: avoid; } }
+</style>
+</head>
+<body>
+
+<h1>Komore: UI Wireframes for Steps 3, 4 and 5</h1>
+<p class="sub">Focus: Scheduling &amp; AI Timetable Engine &middot; Prepared by Shifa Fatima &middot; Mobile app (React Native, Android and iOS)</p>
+<p class="sub">Low-fidelity wireframes. Grey hatched blocks are fixed classes that nothing can move. Each screen lists the database tables it uses (see 001_classes_tasks_timetables.sql).</p>
+
+<h2>Screen flow</h2>
+<div class="flow">
+  <span class="n">Class Schedule</span><span class="a">&rarr;</span>
+  <span class="n">Add / Edit Class</span><span class="a">|</span>
+  <span class="n">Google Calendar Sync</span><span class="a">||</span>
+  <span class="n">Task List</span><span class="a">&rarr;</span>
+  <span class="n">Add / Edit Task</span><span class="a">||</span>
+  <span class="n">Daily Timetable</span><span class="a">&rarr;</span>
+  <span class="n">Edit Task Block</span>
+</div>
+<p class="note">Classes (Step 3) and tasks (Step 4) are the inputs. The Timetable (Step 5) is generated from both. Tapping a task block in the timetable opens the edit sheet; later, Step 6 starts a countdown session from that block.</p>
+
+<!-- ===================== STEP 3 ===================== -->
+<h2>Step 3: Class Schedule</h2>
+<div class="grid">
+
+  <div class="item">
+    <h3>1. Weekly Class Schedule</h3>
+    <div class="phone">
+      <div class="top">My Classes <small>&#8635; Sync</small></div>
+      <div class="body">
+        <div class="days"><div class="on">Mon</div><div>Tue</div><div>Wed</div><div>Thu</div><div>Fri</div><div>Sat</div></div>
+        <div class="card fixed">
+          <div class="row"><span class="t">Software Engineering</span><span>&#128274;</span></div>
+          <div class="m">08:00 - 09:30 &middot; Room 12</div>
+          <div style="margin-top:4px"><span class="tag">Class</span><span class="tag">Manual</span></div>
+        </div>
+        <div class="card fixed">
+          <div class="row"><span class="t">Physics Lab</span><span>&#128274;</span></div>
+          <div class="m">11:00 - 12:30 &middot; Lab 3</div>
+          <div style="margin-top:4px"><span class="tag">Lab</span><span class="tag">Google Calendar</span></div>
+        </div>
+        <div class="card fixed">
+          <div class="row"><span class="t">Data Structures</span><span>&#128274;</span></div>
+          <div class="m">13:00 - 14:00 &middot; Room 7</div>
+          <div style="margin-top:4px"><span class="tag">Class</span><span class="tag">Manual</span></div>
+        </div>
+        <div class="btn ghost">&#128197; Connect Google Calendar</div>
+      </div>
+      <div class="fab">+</div>
+      <div class="tabs"><div class="on">Classes</div><div>Tasks</div><div>Timetable</div></div>
+    </div>
+    <p class="note"><b>Tables:</b> classes. Day tabs filter by day_of_week. The lock icon shows the block is fixed. Tap a card to edit, tap + to add.</p>
+  </div>
+
+  <div class="item">
+    <h3>2. Add / Edit Class</h3>
+    <div class="phone">
+      <div class="top">Add Class <small>Cancel</small></div>
+      <div class="body">
+        <div class="field"><label>Title</label><div class="inp">e.g. Software Engineering</div></div>
+        <div class="field"><label>Type</label><div class="seg"><div class="on">Class</div><div>Lab</div></div></div>
+        <div class="field"><label>Day (repeats weekly)</label><div class="seg"><div>M</div><div class="on">T</div><div>W</div><div>T</div><div>F</div><div>S</div><div>S</div></div></div>
+        <div class="row">
+          <div class="field" style="flex:1"><label>Start time</label><div class="inp">08:00</div></div>
+          <div class="field" style="flex:1"><label>End time</label><div class="inp">09:30</div></div>
+        </div>
+        <div class="field"><label>Location (optional)</label><div class="inp">Room 12</div></div>
+        <div class="warn">&#128274; Classes are fixed. The timetable never moves them.</div>
+        <div class="btn fill">Save Class</div>
+        <div class="btn">Delete Class</div>
+      </div>
+      <div class="tabs"><div class="on">Classes</div><div>Tasks</div><div>Timetable</div></div>
+    </div>
+    <p class="note"><b>Tables:</b> classes (title, kind, day_of_week, start_time, end_time, location). <b>Checks:</b> end time after start time; overlapping classes show a warning before saving.</p>
+  </div>
+
+  <div class="item">
+    <h3>3. Google Calendar Sync</h3>
+    <div class="phone">
+      <div class="top">Calendar Sync <small>&larr; Back</small></div>
+      <div class="body">
+        <div class="card">
+          <div class="t"><span class="dot"></span>Connected</div>
+          <div class="m">student@gmail.com</div>
+          <div class="m">Last synced: today, 07:45</div>
+        </div>
+        <div class="field"><label>Calendar to import</label><div class="inp">University Timetable &#9662;</div></div>
+        <div class="field"><label>Import as</label><div class="seg"><div class="on">Class</div><div>Lab</div></div></div>
+        <div class="warn">Imported events become fixed time blocks. Edit them here, not in the timetable.</div>
+        <div class="card" style="margin-top:8px">
+          <div class="t">Preview: 14 events found</div>
+          <div class="m">12 new &middot; 2 already imported</div>
+        </div>
+        <div class="btn fill">Sync Now</div>
+        <div class="btn">Disconnect Calendar</div>
+      </div>
+      <div class="tabs"><div class="on">Classes</div><div>Tasks</div><div>Timetable</div></div>
+    </div>
+    <p class="note"><b>Tables:</b> calendar_connections (calendar id, tokens, last_synced_at); synced events written to classes with source = google_calendar and google_event_id so re-syncing does not create duplicates. Uses the Google Calendar API.</p>
+  </div>
+
+</div>
+
+<!-- ===================== STEP 4 ===================== -->
+<h2>Step 4: Task Manager</h2>
+<div class="grid">
+
+  <div class="item">
+    <h3>4. Task List</h3>
+    <div class="phone">
+      <div class="top">My Tasks <small>Sort: Deadline &#9662;</small></div>
+      <div class="body">
+        <div class="chips"><div class="on">All</div><div>Assignment</div><div>Exam revision</div><div>Lecture recap</div></div>
+        <div class="card">
+          <div class="row"><span class="t">Calculus Assignment 3</span><span class="tag hi">High</span></div>
+          <div class="m">Assignment &middot; Due Fri 21 Nov, 11:59 PM</div>
+          <div class="m">Est. 90 min &middot; Status: Scheduled</div>
+        </div>
+        <div class="card">
+          <div class="row"><span class="t">DSA Midterm Revision</span><span class="tag hi">High</span></div>
+          <div class="m">Exam revision &middot; Due Mon 24 Nov</div>
+          <div class="m">Est. 120 min &middot; Status: Pending</div>
+        </div>
+        <div class="card">
+          <div class="row"><span class="t">Circuits Lecture 5 Recap</span><span class="tag">Low</span></div>
+          <div class="m">Lecture recap &middot; Due Wed 26 Nov</div>
+          <div class="m">Est. 45 min &middot; Status: Pending</div>
+        </div>
+        <div class="card" style="opacity:.55">
+          <div class="row"><span class="t">Physics Report</span><span class="tag">Done</span></div>
+          <div class="m">Assignment &middot; Completed</div>
+        </div>
+      </div>
+      <div class="fab">+</div>
+      <div class="tabs"><div>Classes</div><div class="on">Tasks</div><div>Timetable</div></div>
+    </div>
+    <p class="note"><b>Tables:</b> tasks. Filter chips use category; badge shows priority; status comes from tasks.status. Completed status is set by Step 8 after photo proof.</p>
+  </div>
+
+  <div class="item">
+    <h3>5. Add / Edit Task</h3>
+    <div class="phone">
+      <div class="top">Add Task <small>Cancel</small></div>
+      <div class="body">
+        <div class="field"><label>Title</label><div class="inp">e.g. Calculus Assignment 3</div></div>
+        <div class="field"><label>Category</label><div class="seg"><div class="on">Assignment</div><div>Exam rev.</div><div>Recap</div></div></div>
+        <div class="field"><label>Priority</label><div class="seg"><div>Low</div><div>Medium</div><div class="on">High</div></div></div>
+        <div class="row">
+          <div class="field" style="flex:1"><label>Deadline date</label><div class="inp">21 Nov 2026</div></div>
+          <div class="field" style="flex:1"><label>Deadline time</label><div class="inp">23:59</div></div>
+        </div>
+        <div class="field"><label>Estimated time</label><div class="inp">90 minutes</div></div>
+        <div class="field"><label>Notes (optional)</label><div class="inp" style="height:46px">Chapters 4 and 5</div></div>
+        <div class="btn fill">Save Task</div>
+        <div class="btn">Delete Task</div>
+      </div>
+      <div class="tabs"><div>Classes</div><div class="on">Tasks</div><div>Timetable</div></div>
+    </div>
+    <p class="note"><b>Tables:</b> tasks (title, description, category, priority, deadline, estimated_minutes). <b>Checks:</b> title required; deadline not in the past; estimate above 0. The estimate lets the scheduler fit the task into a gap.</p>
+  </div>
+
+</div>
+
+<!-- ===================== STEP 5 ===================== -->
+<h2>Step 5: Timetable Maker</h2>
+<div class="grid">
+
+  <div class="item">
+    <h3>6. Daily Timetable</h3>
+    <div class="phone">
+      <div class="top">Timetable <small>&#8635; Regenerate</small></div>
+      <div class="body">
+        <div class="days"><div class="on">Mon</div><div>Tue</div><div>Wed</div><div>Thu</div><div>Fri</div><div>Sat</div></div>
+        <div class="slot"><div class="time">08:00</div><div class="blk cls">&#128274; Software Engineering</div></div>
+        <div class="slot"><div class="time">09:30</div><div class="blk" style="background:#fff"><b>Calculus Assignment 3</b><br><span style="color:#6b7280">High &middot; due Fri &middot; 90 min</span></div></div>
+        <div class="slot"><div class="time">11:00</div><div class="blk cls">&#128274; Physics Lab</div></div>
+        <div class="slot"><div class="time">12:30</div><div class="blk gap">Free gap</div></div>
+        <div class="slot"><div class="time">13:00</div><div class="blk cls">&#128274; Data Structures</div></div>
+        <div class="slot"><div class="time">14:30</div><div class="blk"><b>DSA Midterm Revision</b><br><span style="color:#6b7280">High &middot; due Mon &middot; 120 min</span></div></div>
+        <div class="slot"><div class="time">16:30</div><div class="blk"><b>Circuits Lecture 5 Recap</b><br><span style="color:#6b7280">Low &middot; due Wed &middot; 45 min</span></div></div>
+        <div class="warn">&#9888; 1 task could not be placed today: tap to see it.</div>
+      </div>
+      <div class="tabs"><div>Classes</div><div>Tasks</div><div class="on">Timetable</div></div>
+    </div>
+    <p class="note"><b>Tables:</b> timetables, timetable_entries (joined to classes and tasks). Hatched blocks are fixed classes. Task blocks are ordered most urgent first. Tapping a task block opens the edit sheet.</p>
+  </div>
+
+  <div class="item">
+    <h3>7. Edit Task Block</h3>
+    <div class="phone">
+      <div class="top">Timetable</div>
+      <div class="body">
+        <div class="slot"><div class="time">08:00</div><div class="blk cls">&#128274; Software Engineering</div></div>
+        <div class="slot"><div class="time">09:30</div><div class="blk"><b>Calculus Assignment 3</b></div></div>
+        <div class="slot"><div class="time">11:00</div><div class="blk cls">&#128274; Physics Lab</div></div>
+      </div>
+      <div class="dim"></div>
+      <div class="sheet">
+        <div class="t" style="font-weight:bold;font-size:14px;margin-bottom:8px">Calculus Assignment 3</div>
+        <div class="row">
+          <div class="field" style="flex:1"><label>Start</label><div class="inp">09:30</div></div>
+          <div class="field" style="flex:1"><label>End</label><div class="inp">11:00</div></div>
+        </div>
+        <div class="field"><label>Move to another free gap</label><div class="inp">12:30 - 13:00 (30 min) &#9662;</div></div>
+        <div class="warn">Not enough time? The app shows a conflict warning. Classes cannot be edited here.</div>
+        <div class="btn fill">Save Change</div>
+        <div class="btn">Remove From Today</div>
+      </div>
+    </div>
+    <p class="note"><b>Tables:</b> timetable_entries (start_at, end_at, edited_by_student = true). Edited blocks are kept when the timetable is regenerated. Fixed class entries cannot be edited.</p>
+  </div>
+
+</div>
+
+<h2>How the scheduler fills the day (for the Step 5 logic)</h2>
+<table>
+  <tr><th>Order</th><th>Rule</th></tr>
+  <tr><td>1</td><td>Place all fixed classes for the day first (from classes). They are hard rules.</td></tr>
+  <tr><td>2</td><td>Find free gaps between classes, leaving out time the student needs for travel and sleep (from the onboarding profile).</td></tr>
+  <tr><td>3</td><td>Sort pending tasks by nearest deadline, then by priority (high first), then by category.</td></tr>
+  <tr><td>4</td><td>Put each task into the first gap that fits its estimated time. If it does not fit, split it across gaps or flag it as unplaced.</td></tr>
+  <tr><td>5</td><td>Save the result as a new timetable (older one set inactive). Student edits (edited_by_student) are kept on regeneration.</td></tr>
+  <tr><td>6</td><td>The AI API suggests improvements on top of this result; the student can always edit the plan.</td></tr>
+</table>
+
+</body>
+</html>
